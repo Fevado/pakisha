@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/login_page.dart';
 import 'screens/signup_page.dart';
 import 'screens/home_page.dart';
-// import 'screens/donor_dashboard.dart';
-// import 'screens/recipient_dashboard.dart';
-// import 'screens/post_food_page.dart';
+import 'screens/donor_dashboard.dart';
+import 'screens/recipient_dashboard.dart';
+import 'screens/post_food_screen.dart';
 // import 'screens/map_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: "assets/.env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -38,9 +40,9 @@ class MyApp extends StatelessWidget {
   final email = user?.email ?? 'Unknown';
   return HomePage(userEmail: email);
 },
-        // '/donor': (context) => const DonorDashboard(),
-        // '/recipient': (context) => const RecipientDashboard(),
-        // '/post-food': (context) => const PostFoodPage(),
+        '/donor': (context) => const DonorDashboard(),
+        '/recipient': (context) => const RecipientDashboard(),
+        '/post-food': (context) => const PostFoodScreen(),
         // '/map': (context) => const MapPage(),
       },
     );
