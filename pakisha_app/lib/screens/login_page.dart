@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
-import '../widgets/custom_button.dart';
 import 'signup_page.dart';
 import 'home_page.dart';
 
@@ -24,17 +23,16 @@ class _LoginPageState extends State<LoginPage> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
-      // Navigate to homepage after login
       Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-  builder: (context) {
-    final user = FirebaseAuth.instance.currentUser;
-    final email = user?.email ?? 'Unknown';
-    return HomePage(userEmail: email);
-  },
-),
-    );
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            final user = FirebaseAuth.instance.currentUser;
+            final email = user?.email ?? 'Unknown';
+            return HomePage(userEmail: email);
+          },
+        ),
+      );
     } catch (e) {
       _showError(e.toString());
     }
@@ -50,16 +48,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor:
-          Colors.grey[100], // Login screen exemption from dark theme
+      backgroundColor: Colors.green[50], 
       body: Padding(
         padding: const EdgeInsets.all(24.0),
         child: SingleChildScrollView(
@@ -69,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
               const SizedBox(height: 60),
               const Text(
                 "Welcome to PAKISHA",
-                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.green),
               ),
               const SizedBox(height: 30),
 
@@ -90,9 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _obscurePassword
-                          ? Icons.visibility_off
-                          : Icons.visibility,
+                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
                     ),
                     onPressed: () {
                       setState(() {
@@ -107,37 +100,41 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: _resetPassword,
-                  child: const Text("Forgot Password?"),
+                  child: const Text("Forgot Password?",
+                  style: TextStyle(color: Colors.green),
+                  ),
                 ),
               ),
 
-              ElevatedButton(onPressed: _login, child: const Text("Login")),
-
-              const SizedBox(height: 16),
-
-              CustomSocialButton(
-                label: "Continue with Google",
-                assetPath: "assets/google.png",
-                onPressed: () {
-                  _authService.signInWithGoogle();
-                },
+              ElevatedButton(
+                onPressed: _login,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: const Text("Login"),
               ),
 
-              CustomSocialButton(
-                label: "Continue with Facebook",
-                assetPath: "assets/facebook.png",
-                onPressed: () {
-                  // TODO: Add Facebook login
-                },
+              const SizedBox(height: 24),
+
+              // 🔽 Redesigned Social Login Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  _socialIconButton("assets/google.png", () {
+                    _authService.signInWithGoogle();
+                  }),
+                  _socialIconButton("assets/facebook.png", () {
+                    // TODO: Add Facebook login
+                  }),
+                  _socialIconButton("assets/x.png", () {
+                    // TODO: Add X login
+                  }),
+                ],
               ),
 
-              CustomSocialButton(
-                label: "Continue with X",
-                assetPath: "assets/x.png",
-                onPressed: () {
-                  // TODO: Add X login
-                },
-              ),
+              const SizedBox(height: 24),
 
               TextButton(
                 onPressed: () {
@@ -146,7 +143,9 @@ class _LoginPageState extends State<LoginPage> {
                     MaterialPageRoute(builder: (_) => const SignUpPage()),
                   );
                 },
-                child: const Text("Don't have an account? Sign Up"),
+                child: const Text("Don't have an account? Sign Up",
+                style: TextStyle(color: Colors.green),
+                ),
               ),
               const SizedBox(height: 30),
             ],
@@ -155,4 +154,20 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
+
+  // 🔽 Helper: Circular social button
+  Widget _socialIconButton(String assetPath, VoidCallback onPressed) {
+    return GestureDetector(
+      onTap: onPressed,
+      child: CircleAvatar(
+        radius: 24,
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.all(4),
+          child: Image.asset(assetPath, height: 30, width: 30),
+        ),
+      ),
+    );
+  }
 }
+
