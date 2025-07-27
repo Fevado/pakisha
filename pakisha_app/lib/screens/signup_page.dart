@@ -12,18 +12,38 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final _firstNameController = TextEditingController();
+  final _lastNameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
 
   final AuthService _authService = AuthService();
 
   void _signUp() async {
+    final firstName = _firstNameController.text.trim();
+    final lastName = _lastNameController.text.trim();
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
     final confirmPassword = _confirmPasswordController.text.trim();
+
+    if (firstName.isEmpty) {
+      _showError("First name is required");
+      return;
+    }
+
+    if (email.isEmpty) {
+      _showError("Email is required");
+      return;
+    }
+
+    if (password.length < 8) {
+      _showError("Password must be at least 8 characters");
+      return;
+    }
 
     if (password != confirmPassword) {
       _showError("Passwords do not match");
@@ -32,20 +52,20 @@ class _SignUpPageState extends State<SignUpPage> {
 
     try {
       final userCredential = await _authService.signUpWithEmail(email, password);
-
-      // ✅ Write user info to Firestore
       final uid = userCredential.user!.uid;
+
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'uid': uid,
         'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // Navigate to HomePage
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => HomePage(userEmail: userCredential.user?.email ?? "No Email"),
+          builder: (_) => HomePage(userEmail: email),
         ),
       );
     } catch (e) {
@@ -54,9 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   void _showError(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -67,20 +85,44 @@ class _SignUpPageState extends State<SignUpPage> {
         padding: const EdgeInsets.all(24.0),
         child: SingleChildScrollView(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
               const Text(
                 "Create Your PAKISHA Account",
-                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.green,
+                ),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
+
+              TextField(
+                controller: _firstNameController,
+                decoration: const InputDecoration(
+                  labelText: "First Name *",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person),
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              TextField(
+                controller: _lastNameController,
+                decoration: const InputDecoration(
+                  labelText: "Last Name",
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.person_outline),
+                ),
+              ),
+              const SizedBox(height: 16),
 
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
-                  labelText: "Email",
+                  labelText: "Email *",
                   border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
                 ),
               ),
               const SizedBox(height: 16),
@@ -89,8 +131,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 controller: _passwordController,
                 obscureText: _obscurePassword,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Password *',
                   border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscurePassword ? Icons.visibility_off : Icons.visibility,
@@ -111,6 +154,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 decoration: InputDecoration(
                   labelText: "Confirm Password",
                   border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.lock_outline),
                   suffixIcon: IconButton(
                     icon: Icon(
                       _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
@@ -123,16 +167,22 @@ class _SignUpPageState extends State<SignUpPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 30),
 
               ElevatedButton(
                 onPressed: _signUp,
                 style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green[800],
+                  foregroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
-                child: const Text("Sign Up"),
+                child: const Text("Sign Up", style: TextStyle(fontSize: 16)),
               ),
-              const SizedBox(height: 16),
+
+              const SizedBox(height: 20),
 
               TextButton(
                 onPressed: () {
@@ -141,7 +191,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     MaterialPageRoute(builder: (_) => const LoginPage()),
                   );
                 },
-                child: const Text("Already have an account? Log in"),
+                child: const Text(
+                  "Already have an account? Log in",
+                  style: TextStyle(color: Colors.green),
+                ),
               ),
             ],
           ),
