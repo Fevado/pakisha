@@ -28,7 +28,8 @@ class DefaultFirebaseOptions {
   }
 
   static final FirebaseOptions web = FirebaseOptions(
-    apiKey: dotenv.env['API_KEY_WEB']!,
+    // apiKey: dotenv.env['API_KEY_WEB']!,
+    apiKey: const String.fromEnvironment('FIREBASE_API_KEY_WEB'),
     appId: '1:871087116599:web:66b7cc4c806d4333438ab2',
     messagingSenderId: '871087116599',
     projectId: 'pakisha-app',

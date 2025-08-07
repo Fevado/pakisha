@@ -1,1 +1,39 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"pakisha-app","appId":"1:871087116599:android:9ded9008fcc547aa438ab2","fileOutput":"android/app/google-services.json"}},"dart":{"lib/firebase_options.dart":{"projectId":"pakisha-app","configurations":{"android":"1:871087116599:android:9ded9008fcc547aa438ab2","ios":"1:871087116599:ios:2a7ed455d9536594438ab2","macos":"1:871087116599:ios:2a7ed455d9536594438ab2","web":"1:871087116599:web:66b7cc4c806d4333438ab2","windows":"1:871087116599:web:011583a2a506082b438ab2"}}}}}}
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "pakisha-app",
+          "appId": "1:871087116599:android:9ded9008fcc547aa438ab2",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "pakisha-app",
+          "configurations": {
+            "android": "1:871087116599:android:9ded9008fcc547aa438ab2",
+            "ios": "1:871087116599:ios:2a7ed455d9536594438ab2",
+            "macos": "1:871087116599:ios:2a7ed455d9536594438ab2",
+            "web": "1:871087116599:web:66b7cc4c806d4333438ab2",
+            "windows": "1:871087116599:web:011583a2a506082b438ab2"
+          }
+        }
+      }
+    }
+  },
+  "hosting": {
+    "public": "build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
