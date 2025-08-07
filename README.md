@@ -36,7 +36,7 @@ The app's live domain is : https://pakisha-app.web.app
 
 ---
 
-### `LoginScreen` (`/screens/login_screen.dart`)
+### `LoginScreen` 
 - **Purpose**: Authenticate returning users.
 
 ### `SignUpScreen`
@@ -91,7 +91,7 @@ cd pakisha
 flutter pub get
 flutterfire configure  # Select Firebase project and platforms
 flutter run 
-'''
+```
 
 
 #### Contact me
