@@ -1,7 +1,7 @@
 # Pakisha
 
 **Pakisha** is a community-powered food redistribution platform built to tackle food waste and hunger by connecting those with surplus food to those in need. Whether you're a donor with excess food or a recipient looking for support, Pakisha provides a simple and accessible platform to help. 
-The app's live domain is : https://pakisha-app.web.app
+The app's live domain is : https://pakisha-app.web.app/
 
 ---
 
